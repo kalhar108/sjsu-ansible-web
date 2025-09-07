@@ -40,3 +40,23 @@ Security group or firewall rules allowing:
 TCP 22 (SSH) from your host
 
 TCP 8080 (HTTP) from your browser
+
+
+## Usage
+1) Edit `inventory.ini` with your VM IPs and SSH key path.
+2) Test: `ansible all -m ping`
+3) Deploy: `ansible-playbook site.yml --tags deploy`
+4) Verify:
+   - `curl http://<vm1-ip>:8080` → **Hello World from SJSU-1**
+   - `curl http://<vm2-ip>:8080` → **Hello World from SJSU-2**
+5) Un-deploy: `ansible-playbook site.yml --tags undeploy`
+
+## 🛠 Requirements
+- Ansible on macOS/Linux
+- SSH access to the two VMs
+- Firewall/Security Group: TCP 22 (SSH) and TCP 8080 (HTTP)
+EOF
+
+git add README.md
+git commit -m "Add README with project details"
+git push
