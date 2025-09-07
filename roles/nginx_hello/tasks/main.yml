@@ -1,0 +1,48 @@
+---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+
+- name: Create web root
+  ansible.builtin.file:
+    path: /var/www/hello
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: "0755"
+
+- name: Deploy index.html
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /var/www/hello/index.html
+    mode: "0644"
+
+- name: Deploy Nginx config
+  ansible.builtin.template:
+    src: hello.conf.j2
+    dest: /etc/nginx/sites-available/hello
+    mode: "0644"
+
+- name: Enable site
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/hello
+    dest: /etc/nginx/sites-enabled/hello
+    state: link
+    force: yes
+
+- name: Disable default site
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Restart Nginx
+  ansible.builtin.systemd:
+    name: nginx
+    state: restarted
+    enabled: yes

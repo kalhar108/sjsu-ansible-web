@@ -1,0 +1,40 @@
+---
+- name: Deploy webserver (Nginx on 8080)
+  hosts: web
+  become: yes
+  tags: [deploy]
+  roles:
+    - nginx_hello
+
+- name: Un-deploy webserver (remove Nginx and site)
+  hosts: web
+  become: yes
+  tags: [undeploy]
+  tasks:
+    - name: Stop and disable Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: stopped
+        enabled: no
+
+    - name: Remove site symlink
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/hello
+        state: absent
+
+    - name: Remove site config
+      ansible.builtin.file:
+        path: /etc/nginx/sites-available/hello
+        state: absent
+
+    - name: Remove web root
+      ansible.builtin.file:
+        path: /var/www/hello
+        state: absent
+
+    - name: Remove Nginx package
+      ansible.builtin.apt:
+        name: nginx
+        state: absent
+        purge: yes
+        update_cache: yes
