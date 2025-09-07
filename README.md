@@ -14,14 +14,22 @@ The playbook supports both **deploy** and **undeploy** operations.
 ## Project Structure
 sjsu-ansible-web/
 ├── ansible.cfg # Ansible configuration file
+
 ├── inventory.ini # Inventory with VM IPs and variables
+
 ├── site.yml # Main playbook (deploy + undeploy)
+
 └── roles/
+
 └── nginx_hello/
+
 ├── tasks/
 │ └── main.yml # Role tasks: install, configure, restart Nginx
+
 └── templates/
+
 ├── hello.conf.j2 # Nginx site config template (port 8080)
+
 └── index.html.j2 # Web page template (Hello World SJSU-X)
 
 
